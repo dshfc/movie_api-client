@@ -1,21 +1,45 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 
-class App extends Component {
+export default class App extends Component {
+  constructor(props) {
+  super(props);
+  this.state = {
+    title: ''
+  };
+this.searchMovie = this.searchMovie.bind(this);
+this.clearSearch = this.clearSearch.bind(this);
+this.handleChange = this.handleChange.bind(this);
+
+  }
+handleChange(event) {
+  const newState = {};
+  newState[event.target.title] = event.target.value;
+  this.setState(Object.assign({}, this.state, newState));
+}
+
+searchMovie() {
+  this.props.searchMovie(this.state);
+}
+
+clearSearch(event) {
+  
+  this.setState({title: ''});
+
+}
   render() {
     return (
       <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
-        </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+          <h1>Movie search</h1>
+          <form>
+        <input type="text" name="title" value = {this.props.title} onChange = {this.handleChange}/>
+        
+        <button id ="search" onClick = {this.searchMovie}> Search </button>
+        <button id ="clear" onClick = {this.clearSearch}> Clear </button>
+        </form>
       </div>
     );
   }
 }
 
-export default App;
+
