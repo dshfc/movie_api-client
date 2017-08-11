@@ -1,42 +1,42 @@
 import React, { Component } from 'react';
 import './App.css';
-
+import MovieList from './MovieList'
 export default class App extends Component {
   constructor(props) {
   super(props);
   this.state = {
-    title: ''
+    search: '',
+    movies: []
   };
-this.searchMovie = this.searchMovie.bind(this);
-this.clearSearch = this.clearSearch.bind(this);
-this.handleChange = this.handleChange.bind(this);
-
+// this.searchMovie = this.searchMovie.bind(this);
+// this.clearSearch = this.clearSearch.bind(this);
   }
-handleChange(event) {
-  const newState = {};
-  newState[event.target.title] = event.target.value;
-  this.setState(Object.assign({}, this.state, newState));
-}
 
-searchMovie() {
-  this.props.searchMovie(this.state);
-}
+searchMovie(e) {
+    e.preventDefault();
+    fetch(`http://www.omdbapi.com/?apikey=c5a8df09&s=${e.target.search.value}`)
+    .then((response) => response.json())
+    .then((response) => this.setState({movies: response.Search}));
+     
+    }
 
-clearSearch(event) {
-  
-  this.setState({title: ''});
+clearSearch(){ 
+        // let newState = this.state
+        // newState= {}
+        this.setState({ movies: '' })
+    }
 
-}
+
   render() {
     return (
       <div className="App">
+        <MovieList movies={this.state.movies}/>
           <h1>Movie search</h1>
-          <form>
-        <input type="text" name="title" value = {this.props.title} onChange = {this.handleChange}/>
-        
-        <button id ="search" onClick = {this.searchMovie}> Search </button>
-        <button id ="clear" onClick = {this.clearSearch}> Clear </button>
+          <form onSubmit={(event) => this.searchMovie(event)}>
+          <input type="text" name= "search" />
+          <input type='submit'/>
         </form>
+        <button id ="clear" onClick = {() => this.clearSearch()}> Clear </button>
       </div>
     );
   }
